@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Neatweek
+//  NeatweekiOS
 //
 //  Created by Mihnea on 12/15/22.
 //
