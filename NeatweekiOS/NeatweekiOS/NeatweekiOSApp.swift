@@ -10,8 +10,8 @@ import SwiftUI
 @main
 struct NeatweekiOSApp: App {
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        WindowGroup{
+            MainView()
         }
     }
 }

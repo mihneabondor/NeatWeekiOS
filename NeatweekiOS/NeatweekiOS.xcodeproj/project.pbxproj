@@ -7,16 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D720DFE429587705005C6087 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D720DFE329587705005C6087 /* Structs.swift */; };
+		D757DBD5295898EC005F7F1E /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D757DBD4295898EC005F7F1E /* MainView.swift */; };
+		D757DBD729589E11005F7F1E /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D757DBD629589E11005F7F1E /* Functions.swift */; };
 		D7B55B742958753B00952BF0 /* NeatweekiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B55B732958753B00952BF0 /* NeatweekiOSApp.swift */; };
-		D7B55B762958753B00952BF0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B55B752958753B00952BF0 /* ContentView.swift */; };
+		D7B55B762958753B00952BF0 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B55B752958753B00952BF0 /* ListView.swift */; };
 		D7B55B782958753C00952BF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7B55B772958753C00952BF0 /* Assets.xcassets */; };
 		D7B55B7B2958753C00952BF0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7B55B7A2958753C00952BF0 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D720DFE329587705005C6087 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
+		D757DBD4295898EC005F7F1E /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		D757DBD629589E11005F7F1E /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		D7B55B702958753B00952BF0 /* NeatweekiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NeatweekiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7B55B732958753B00952BF0 /* NeatweekiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeatweekiOSApp.swift; sourceTree = "<group>"; };
-		D7B55B752958753B00952BF0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D7B55B752958753B00952BF0 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		D7B55B772958753C00952BF0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7B55B7A2958753C00952BF0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -51,10 +57,13 @@
 		D7B55B722958753B00952BF0 /* NeatweekiOS */ = {
 			isa = PBXGroup;
 			children = (
+				D757DBD629589E11005F7F1E /* Functions.swift */,
 				D7B55B732958753B00952BF0 /* NeatweekiOSApp.swift */,
-				D7B55B752958753B00952BF0 /* ContentView.swift */,
+				D757DBD4295898EC005F7F1E /* MainView.swift */,
+				D7B55B752958753B00952BF0 /* ListView.swift */,
 				D7B55B772958753C00952BF0 /* Assets.xcassets */,
 				D7B55B792958753C00952BF0 /* Preview Content */,
+				D720DFE329587705005C6087 /* Structs.swift */,
 			);
 			path = NeatweekiOS;
 			sourceTree = "<group>";
@@ -137,7 +146,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7B55B762958753B00952BF0 /* ContentView.swift in Sources */,
+				D720DFE429587705005C6087 /* Structs.swift in Sources */,
+				D757DBD5295898EC005F7F1E /* MainView.swift in Sources */,
+				D7B55B762958753B00952BF0 /* ListView.swift in Sources */,
+				D757DBD729589E11005F7F1E /* Functions.swift in Sources */,
 				D7B55B742958753B00952BF0 /* NeatweekiOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -270,6 +282,7 @@
 				DEVELOPMENT_TEAM = YEMNXYPUT3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Neatweek;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -302,6 +315,7 @@
 				DEVELOPMENT_TEAM = YEMNXYPUT3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Neatweek;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
