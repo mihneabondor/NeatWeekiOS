@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct ListView: View {
-    var filter : String
+    @State var filter : String = "Later"
     @State private var viewSpecificTask = [Task]()
     
     // variables for alert
     @State private var presentAddAlert : Bool = false
     @State private var newTaskText = String()
-    
     var body: some View {
         VStack{
             HStack{
@@ -120,12 +119,20 @@ struct ListView: View {
             .onAppear() {
                 viewSpecificTask = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == filter})
             }
+            .onChange(of: filter) { _ in
+                withAnimation{
+                    viewSpecificTask = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == filter})
+                }
+            }
+            
+            BottomBarView(filter: $filter)
+            
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ListView(filter: "Later")
+        ListView()
     }
 }

@@ -10,6 +10,7 @@
 		D720DFE429587705005C6087 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D720DFE329587705005C6087 /* Structs.swift */; };
 		D757DBD5295898EC005F7F1E /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D757DBD4295898EC005F7F1E /* MainView.swift */; };
 		D757DBD729589E11005F7F1E /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D757DBD629589E11005F7F1E /* Functions.swift */; };
+		D77142542958E5D700CD3964 /* BottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77142532958E5D700CD3964 /* BottomBarView.swift */; };
 		D7B55B742958753B00952BF0 /* NeatweekiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B55B732958753B00952BF0 /* NeatweekiOSApp.swift */; };
 		D7B55B762958753B00952BF0 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B55B752958753B00952BF0 /* ListView.swift */; };
 		D7B55B782958753C00952BF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7B55B772958753C00952BF0 /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 		D720DFE329587705005C6087 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
 		D757DBD4295898EC005F7F1E /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D757DBD629589E11005F7F1E /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		D77142532958E5D700CD3964 /* BottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarView.swift; sourceTree = "<group>"; };
 		D7B55B702958753B00952BF0 /* NeatweekiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NeatweekiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7B55B732958753B00952BF0 /* NeatweekiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeatweekiOSApp.swift; sourceTree = "<group>"; };
 		D7B55B752958753B00952BF0 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				D7B55B732958753B00952BF0 /* NeatweekiOSApp.swift */,
 				D757DBD4295898EC005F7F1E /* MainView.swift */,
 				D7B55B752958753B00952BF0 /* ListView.swift */,
+				D77142532958E5D700CD3964 /* BottomBarView.swift */,
 				D7B55B772958753C00952BF0 /* Assets.xcassets */,
 				D7B55B792958753C00952BF0 /* Preview Content */,
 				D720DFE329587705005C6087 /* Structs.swift */,
@@ -149,6 +152,7 @@
 				D720DFE429587705005C6087 /* Structs.swift in Sources */,
 				D757DBD5295898EC005F7F1E /* MainView.swift in Sources */,
 				D7B55B762958753B00952BF0 /* ListView.swift in Sources */,
+				D77142542958E5D700CD3964 /* BottomBarView.swift in Sources */,
 				D757DBD729589E11005F7F1E /* Functions.swift in Sources */,
 				D7B55B742958753B00952BF0 /* NeatweekiOSApp.swift in Sources */,
 			);
