@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct ListView: View {
-    @State var filter : String = "Later"
+    @State var filter : String = Functions.SharedInstance.getStartingPage()
     @State private var viewSpecificTask = [Task]()
     
     // variables for alert
     @State private var presentAddAlert : Bool = false
     @State private var newTaskText = String()
+    
     var body: some View {
         VStack{
             HStack{
@@ -29,7 +30,16 @@ struct ListView: View {
                 }
                 .padding()
             }
-            
+            if viewSpecificTask.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("No tasks in the \(filter) page")
+                        .bold()
+                    Text("Please add a new task by clicking the + icon")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                }
+            }
             List(viewSpecificTask, id: \.id) {task in
                 Text(task.text)
                     .strikethrough(task.completed)
@@ -118,15 +128,17 @@ struct ListView: View {
             .navigationTitle(filter)
             .onAppear() {
                 viewSpecificTask = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == filter})
+                
+                // Notifications
+                LocalNotifications.sharedInstance.requestPermission()
+                LocalNotifications.sharedInstance.beginningOfWeekNotification()
             }
             .onChange(of: filter) { _ in
                 withAnimation{
                     viewSpecificTask = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == filter})
                 }
             }
-            
             BottomBarView(filter: $filter)
-            
         }
     }
 }

@@ -34,4 +34,27 @@ class Functions {
             print("Unable to Encode Array of Tasks ((error))")
         }
     }
+    
+    public func getStartingPage() -> String {
+        struct pageCounter {
+            var filter : String, count : Int
+        }
+        var array : [pageCounter] = [.init(filter: "Later", count: 0), .init(filter: "Week", count: 0), .init(filter: "Today", count: 0)]
+        var intermediarArray = [Task]()
+        
+        for i in 0..<3 {
+            intermediarArray = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == array[i].filter})
+            array[i].count = intermediarArray.count
+        }
+        
+//        array.sort(by: {$0.count >= $1.count})
+        print(array)
+        
+        for element in array.reversed() {
+            if element.count > 0 {
+                return element.filter
+            }
+        }
+        return array[0].filter
+    }
 }
