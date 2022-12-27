@@ -31,6 +31,7 @@
 		D7B55B752958753B00952BF0 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		D7B55B772958753C00952BF0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7B55B7A2958753C00952BF0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D7E2DB83295B5C3F001D7241 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 		D7B55B722958753B00952BF0 /* NeatweekiOS */ = {
 			isa = PBXGroup;
 			children = (
+				D7E2DB83295B5C3F001D7241 /* Info.plist */,
 				D757DBD629589E11005F7F1E /* Functions.swift */,
 				D7B55B732958753B00952BF0 /* NeatweekiOSApp.swift */,
 				D757DBD4295898EC005F7F1E /* MainView.swift */,
@@ -294,6 +296,7 @@
 				DEVELOPMENT_TEAM = YEMNXYPUT3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NeatweekiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Neatweek;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -327,6 +330,7 @@
 				DEVELOPMENT_TEAM = YEMNXYPUT3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NeatweekiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Neatweek;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
