@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct ListView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @State var filter : String = Functions.SharedInstance.getStartingPage()
     @State private var viewSpecificTask = [Task]()
     
     // variables for alert
     @State private var presentAddAlert : Bool = false
     @State private var newTaskText = String()
+    
+    enum Direction {
+        case next, previous
+    }
     
     var body: some View {
         VStack{
@@ -42,67 +48,26 @@ struct ListView: View {
             }
             List(viewSpecificTask, id: \.id) {task in
                 Text(task.text)
+                    .foregroundColor(task.completed ? Color.gray : colorScheme == .dark ? Color.white : Color.black)
                     .strikethrough(task.completed)
                     .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            withAnimation{
-                                let tasksIndex = tasks.firstIndex(where: {$0.text == task.text})
-                                tasks.remove(at: tasksIndex!)
-                                
-                                let viewSpecificTaskIndex = viewSpecificTask.firstIndex(where: {$0.id == task.id})
-                                viewSpecificTask.remove(at: viewSpecificTaskIndex!)
-                                
-                                Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
-                            }
-                        } label: {
-                            Image(systemName: "trash.fill")
+                        if filter == "Later" {
+                            Button(role: .destructive) {deleteSwipeButton(task: task)} label: {Image(systemName: "trash.fill")}
+                        } else {
+                            Button {moveSwipeButton(task: task, direction: .previous)} label: {Image(systemName: "arrowshape.turn.up.left.fill")}.tint(.indigo)
+                            Button(role: .destructive) {deleteSwipeButton(task: task)} label: {Image(systemName: "trash.fill")}
                         }
                     }
                     .swipeActions(edge: .leading) {
-                        Button() {
-                            withAnimation{
-                                var nextFilter = String()
-                                switch filter {
-                                case "Later":
-                                    nextFilter = "Week"
-                                case "Week":
-                                    nextFilter = "Today"
-                                default:
-                                    nextFilter = "Later"
-                                }
-                                
-                                let tasksIndex = tasks.firstIndex(where: {$0.text == task.text})
-                                tasks[tasksIndex!].due = nextFilter
-                                let viewSpecificTaskIndex = viewSpecificTask.firstIndex(where: {$0.id == task.id})
-                                viewSpecificTask.remove(at: viewSpecificTaskIndex!)
-                                Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
-                            }
-                            
-                        } label: {
-                            if filter != "today" {
-                                Image(systemName: "arrowshape.turn.up.right.fill")
+                        if filter != "Today" {
+                            Button {moveSwipeButton(task: task, direction: .next)} label: {Image(systemName: "arrowshape.turn.up.right.fill")}.tint(.indigo)
+                            Button {completeTaskButton(task: task)} label: {Image(systemName: "checkmark.circle.fill")}
+                        } else {
+                            if task.completed {
+                                Button {completeTaskButton(task: task)} label: {Image(systemName: "checkmark.circle.badge.xmark.fill")}
                             } else {
-                                Image(systemName: "arrowshape.turn.up.left.fill")
+                                Button {completeTaskButton(task: task)} label: {Image(systemName: "checkmark.circle.fill")}
                             }
-                        }
-                        .tint(.indigo)
-                        
-                        Button() {
-                            withAnimation {
-                                let tasksIndex = tasks.firstIndex(where: {$0.text == task.text})
-                                tasks[tasksIndex!].completed.toggle()
-                                tasks.sort(by: {!$0.completed && $1.completed})
-                                
-                                let viewSpecificTaskIndex = viewSpecificTask.firstIndex(where: {$0.id == task.id})
-                                
-                                viewSpecificTask[viewSpecificTaskIndex!].completed.toggle()
-                                
-                                viewSpecificTask.sort(by: {!$0.completed && $1.completed})
-                                
-                                Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
-                            }
-                        } label: {
-                            Image(systemName: "checkmark")
                         }
                     }
             }
@@ -127,6 +92,38 @@ struct ListView: View {
             .padding()
             .navigationTitle(filter)
             .onAppear() {
+                // Resetting data every day
+                let components = Date().get(.day, .weekday)
+                if UserDefaults.standard.integer(forKey: userDefaultsTimestampKey) != components.day {
+                    var indexesToBeRemoved = [Int]()
+                    if components.weekday == 1 {
+                        for index in 0..<tasks.count {
+                            tasks[index].due = "Later"
+                            if tasks[index].completed {
+                                indexesToBeRemoved.append(index)
+                            }
+                        }
+                    } else {
+                        for index in 0..<tasks.count {
+                            if tasks[index].due == "Today" {
+                                tasks[index].due = "Week"
+                            }
+                            if tasks[index].completed {
+                                indexesToBeRemoved.append(index)
+                            }
+                        }
+                    }
+                    
+                    tasks = tasks
+                        .enumerated()
+                        .filter { !indexesToBeRemoved.contains($0.offset) }
+                        .map { $0.element }
+                    
+                    Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
+                    UserDefaults.standard.set(components.day, forKey: userDefaultsTimestampKey)
+                }
+                filter = Functions.SharedInstance.getStartingPage()
+                
                 viewSpecificTask = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == filter})
                 
                 // Notifications
@@ -141,6 +138,71 @@ struct ListView: View {
             BottomBarView(filter: $filter)
         }
     }
+    
+    private func deleteSwipeButton(task : Task) {
+        withAnimation{
+            let tasksIndex = tasks.firstIndex(where: {$0.text == task.text})
+            tasks.remove(at: tasksIndex!)
+            
+            let viewSpecificTaskIndex = viewSpecificTask.firstIndex(where: {$0.id == task.id})
+            viewSpecificTask.remove(at: viewSpecificTaskIndex!)
+            
+            Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
+        }
+    }
+    
+    private func moveSwipeButton(task: Task, direction : Direction) {
+        withAnimation{
+            var nextFilter = String()
+            
+            if direction == .next {
+                switch filter {
+                case "Later":
+                    nextFilter = "Week"
+                case "Week":
+                    nextFilter = "Today"
+                default:
+                    nextFilter = "Later"
+                }
+            } else {
+                switch filter {
+                case "Week":
+                    nextFilter = "Later"
+                default:
+                    nextFilter = "Week"
+                }
+            }
+            
+            let tasksIndex = tasks.firstIndex(where: {$0.text == task.text})
+            tasks[tasksIndex!].due = nextFilter
+            let viewSpecificTaskIndex = viewSpecificTask.firstIndex(where: {$0.id == task.id})
+            viewSpecificTask.remove(at: viewSpecificTaskIndex!)
+            Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
+        }
+    }
+    
+    private func completeTaskButton(task: Task) {
+        withAnimation {
+            let tasksIndex = tasks.firstIndex(where: {$0.text == task.text})
+            tasks[tasksIndex!].completed.toggle()
+            tasks[tasksIndex!].due = "Today"
+            tasks.sort(by: {!$0.completed && $1.completed})
+            
+            let viewSpecificTaskIndex = viewSpecificTask.firstIndex(where: {$0.id == task.id})
+            
+            viewSpecificTask[viewSpecificTaskIndex!].completed.toggle()
+            
+            if filter != "Today" {
+                viewSpecificTask.remove(at: viewSpecificTaskIndex!)
+            }
+            
+            viewSpecificTask.sort(by: {!$0.completed && $1.completed})
+            
+            Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
+        }
+        
+    }
+
 }
 
 struct ContentView_Previews: PreviewProvider {

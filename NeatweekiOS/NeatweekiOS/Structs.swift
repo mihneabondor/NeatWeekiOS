@@ -18,4 +18,5 @@ struct Task : Identifiable, Codable {
 }
 
 let userDefaultsSaveKey = "com.aoklabs.NeatweekiOS.tasks"
+let userDefaultsTimestampKey = "com.aoklabs.NeatweekiOS.timeDay"
 var tasks = Functions.SharedInstance.getData(key: userDefaultsSaveKey)
