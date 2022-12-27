@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ListView: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.editMode) var mode
     
     @State var filter : String = Functions.SharedInstance.getStartingPage()
     @State private var viewSpecificTask = [Task]()
@@ -20,38 +21,39 @@ struct ListView: View {
     @State private var showTextField : Bool = false
     @FocusState private var textFieldFocus : Bool
     
+    @State private var tappedOnList = false
     enum Direction {
         case next, previous
     }
     
     var body: some View {
         VStack{
+            Text(" ")
+                .padding()
+                .font(.title)
             HStack{
                 Text(filter)
                     .font(.title)
                     .bold()
-                    .padding()
+                    .padding([.top, .trailing, .leading])
                 Spacer()
-                Button() {
-                    presentAddAlert = true
-                } label: {
-                    Image(systemName: "plus")
-                }
-                .padding()
             }
+            Divider()
             if viewSpecificTask.isEmpty && showTextField == false {
                 VStack {
                     Spacer()
                     Text("No tasks in the \(filter) page")
                         .bold()
-                    Text("Please add a new task by clicking the + icon")
+                    Text("Add a new task by double tapping anywhere \n or by swiping tasks from the other pages")
+                        .multilineTextAlignment(.center)
                         .font(.footnote)
                         .foregroundColor(.gray)
                 }
             }
             List() {
-                if showTextField {
+                if showTextField && mode?.wrappedValue.isEditing == false {
                     TextField("New task", text: $newTaskText)
+                        .submitLabel(.done)
                         .focused($textFieldFocus)
                         .onAppear() {
                             newTaskText = ""
@@ -81,8 +83,10 @@ struct ListView: View {
                             if filter == "Later" {
                                 Button(role: .destructive) {deleteSwipeButton(task: task)} label: {Image(systemName: "trash.fill")}
                             } else {
-                                Button {moveSwipeButton(task: task, direction: .previous)} label: {Image(systemName: "arrowshape.turn.up.left.fill")}.tint(.indigo)
-                                Button(role: .destructive) {deleteSwipeButton(task: task)} label: {Image(systemName: "trash.fill")}
+                                if !task.completed{
+                                    Button {moveSwipeButton(task: task, direction: .previous)} label: {Image(systemName: "arrowshape.turn.up.left.fill")}.tint(.indigo)
+                                }
+                                    Button(role: .destructive) {deleteSwipeButton(task: task)} label: {Image(systemName: "trash.fill")}
                             }
                         }
                         .swipeActions(edge: .leading) {
@@ -101,22 +105,6 @@ struct ListView: View {
             }
             .listStyle(.grouped)
             .scrollContentBackground(.hidden)
-            .alert("Add Task", isPresented: $presentAddAlert, actions: {
-                TextField("Name", text: $newTaskText)
-                Button("Add", action: {
-                    withAnimation {
-                        viewSpecificTask.insert(Task(text: newTaskText, due: filter), at: 0)
-                        
-                        tasks.insert(Task(text: newTaskText, due: filter), at: 0)
-                        
-                        Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
-                        newTaskText = String()
-                        
-                        viewSpecificTask.sort(by: {!$0.completed && $1.completed})
-                    }
-                })
-                Button("Cancel", role: .cancel, action: {})
-            })
             .navigationTitle(filter)
             .onAppear() {
                 // Resetting data every day
@@ -164,14 +152,22 @@ struct ListView: View {
             }
             BottomBarView(filter: $filter)
         }
-        .onTapGesture {
+        .onTapGesture(count: 2) {
             withAnimation{
                 showTextField.toggle()
                 textFieldFocus.toggle()
             }
         }
+//        .onTapGesture() {
+//            if showTextField {
+//                withAnimation{
+//                    showTextField = false
+//                    textFieldFocus = false
+//                }
+//            }
+//        }
         .gesture(
-            DragGesture(minimumDistance: 50)
+            DragGesture(minimumDistance: 30)
                 .onEnded({ endedGesture in
                     withAnimation {
                         var nextFilter = String()
