@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import BackgroundTasks
 
 struct ListView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -25,6 +26,8 @@ struct ListView: View {
     enum Direction {
         case next, previous
     }
+    
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         VStack{
@@ -60,17 +63,21 @@ struct ListView: View {
                         }
                         .onSubmit {
                             withAnimation {
+                                newTaskText = newTaskText.trimmingCharacters(in: .whitespacesAndNewlines)
+                                
                                 showTextField.toggle()
                                 textFieldFocus.toggle()
                                 
-                                viewSpecificTask.insert(Task(text: newTaskText, due: filter), at: 0)
-                                
-                                tasks.insert(Task(text: newTaskText, due: filter), at: 0)
-                                
-                                Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
-                                newTaskText = String()
-                                
-                                viewSpecificTask.sort(by: {!$0.completed && $1.completed})
+                                if newTaskText != "" {
+                                    viewSpecificTask.insert(Task(text: newTaskText, due: filter), at: 0)
+                                    
+                                    tasks.insert(Task(text: newTaskText, due: filter), at: 0)
+                                    
+                                    Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
+                                    newTaskText = String()
+                                    
+                                    viewSpecificTask.sort(by: {!$0.completed && $1.completed})
+                                }
                             }
                         }
                     
@@ -108,35 +115,7 @@ struct ListView: View {
             .navigationTitle(filter)
             .onAppear() {
                 // Resetting data every day
-                let components = Date().get(.day, .weekday)
-                if UserDefaults.standard.integer(forKey: userDefaultsTimestampKey) != components.day {
-                    var indexesToBeRemoved = [Int]()
-                    if components.weekday == 1 {
-                        for index in 0..<tasks.count {
-                            tasks[index].due = "Later"
-                            if tasks[index].completed {
-                                indexesToBeRemoved.append(index)
-                            }
-                        }
-                    } else {
-                        for index in 0..<tasks.count {
-                            if tasks[index].due == "Today" {
-                                tasks[index].due = "Week"
-                            }
-                            if tasks[index].completed {
-                                indexesToBeRemoved.append(index)
-                            }
-                        }
-                    }
-                    
-                    tasks = tasks
-                        .enumerated()
-                        .filter { !indexesToBeRemoved.contains($0.offset) }
-                        .map { $0.element }
-                    
-                    Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
-                    UserDefaults.standard.set(components.day, forKey: userDefaultsTimestampKey)
-                }
+                resetTasks()
                 filter = Functions.SharedInstance.getStartingPage()
                 
                 viewSpecificTask = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == filter})
@@ -150,22 +129,27 @@ struct ListView: View {
                     viewSpecificTask = Functions.SharedInstance.getData(key: userDefaultsSaveKey).filter({$0.due == filter})
                 }
             }
+            .onChange(of: scenePhase) {phase in
+                if phase == .active {
+                    resetTasks()
+                }
+            }
             BottomBarView(filter: $filter)
         }
         .onTapGesture(count: 2) {
             withAnimation{
-                showTextField.toggle()
-                textFieldFocus.toggle()
+                showTextField = true
+                textFieldFocus = true
             }
         }
-//        .onTapGesture() {
-//            if showTextField {
-//                withAnimation{
-//                    showTextField = false
-//                    textFieldFocus = false
-//                }
-//            }
-//        }
+        .onTapGesture() {
+            if showTextField {
+                withAnimation{
+                    showTextField = false
+                    textFieldFocus = false
+                }
+            }
+        }
         .gesture(
             DragGesture(minimumDistance: 30)
                 .onEnded({ endedGesture in
@@ -262,6 +246,39 @@ struct ListView: View {
             Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
         }
         
+    }
+    
+    
+    private func resetTasks() {
+        let components = Date().get(.day, .weekday)
+        if UserDefaults.standard.integer(forKey: userDefaultsTimestampKey) != components.day {
+            var indexesToBeRemoved = [Int]()
+            if components.weekday == 1 {
+                for index in 0..<tasks.count {
+                    tasks[index].due = "Later"
+                    if tasks[index].completed {
+                        indexesToBeRemoved.append(index)
+                    }
+                }
+            } else {
+                for index in 0..<tasks.count {
+                    if tasks[index].due == "Today" {
+                        tasks[index].due = "Week"
+                    }
+                    if tasks[index].completed {
+                        indexesToBeRemoved.append(index)
+                    }
+                }
+            }
+            
+            tasks = tasks
+                .enumerated()
+                .filter { !indexesToBeRemoved.contains($0.offset) }
+                .map { $0.element }
+            
+            Functions.SharedInstance.saveData(key: userDefaultsSaveKey, array: tasks)
+            UserDefaults.standard.set(components.day, forKey: userDefaultsTimestampKey)
+        }
     }
     
 }
